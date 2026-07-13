@@ -2,7 +2,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-// ✅ Add 'async' before the function
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -33,19 +32,18 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // Auth check - now works with async
+  // Auth check
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Public routes (no authentication required)
+  // Public routes
   const publicRoutes = ['/login', '/signup']
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname)
 
-  // If user is not logged in and trying to access protected route
+  // Protected route handling
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // If user is logged in and trying to access login/signup
   if (user && isPublicRoute) {
     return NextResponse.redirect(new URL('/', request.url))
   }

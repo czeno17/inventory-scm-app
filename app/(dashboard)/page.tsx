@@ -96,7 +96,7 @@ export default function Dashboard() {
       const monthlyOrders = orders?.filter(o => o.created_at >= startOfMonth) || []
       const monthlyRevenue = monthlyOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0)
 
-      // 3. Get low stock items - ✅ FIXED HERE
+      // 3. Get low stock items
       const { data: stockData } = await supabase
         .from('stock')
         .select(`
